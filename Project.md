@@ -306,4 +306,35 @@ Defines the pipelines for processing and exporting telemetry data:
     This pipeline handles log data, processes it with the `batch` processor, and exports it to OpenSearch and the debug endpoint.
 
 ### Summary
-This file configures an OpenTelemetry Collector to gather telemetry data from various sources, process it, and export it to different backends like Jaeger, Prometheus, and OpenSearch. Each pipeline is responsible for a specific type of telemetry data (traces, metrics, logs), ensuring that the data is collected, processed, and exported according to the defined configuration.
+> This file configures an OpenTelemetry Collector to gather telemetry data from various sources, process it, and export it to different backends like Jaeger, Prometheus, and OpenSearch. Each pipeline is responsible for a specific type of telemetry data (traces, metrics, logs), ensuring that the data is collected, processed, and exported according to the defined configuration.
+
+> Now that you understood everything, lets start with deploying the application and then OBSERVE it!
+
+## Install Docker
+```shell
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+Now start the application:
+```shell
+sudo docker compose up --force-recreate --remove-orphans --detach
+```
+
+> Once all the containers are started, we can see the access them:
+- Web store: [http://IP:8080/](http://localhost:8080/)
+- Grafana: [http://IP:8080/grafana/](http://localhost:8080/grafana/)
+- Load Generator UI: [http://IP:8080/loadgen/](http://localhost:8080/loadgen/)
+- Jaeger UI: [http://IP:8080/jaeger/ui/](http://localhost:8080/jaeger/ui/)
