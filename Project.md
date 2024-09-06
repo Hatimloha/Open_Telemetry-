@@ -208,3 +208,102 @@ service:
       processors: [batch]
       exporters: [opensearch, debug]
 ```
+
+## otelcol-config.yaml file explained!
+> This file is a configuration for an OpenTelemetry Collector, which is used to collect, process, and export telemetry data (traces, metrics, logs) from various sources. Below is a breakdown of each section:
+
+### **Receivers**
+
+- **`otlp:`**
+    
+    The OpenTelemetry Protocol (OTLP) receiver is configured to accept telemetry data over `gRPC` and `HTTP`. The `endpoint` values are determined by environment variables `OTEL_COLLECTOR_HOST`, `OTEL_COLLECTOR_PORT_GRPC`, and `OTEL_COLLECTOR_PORT_HTTP`. The `CORS` configuration allows requests from any HTTP or HTTPS origin.
+    
+- **`httpcheck/frontendproxy:`**
+    
+    This receiver checks the availability of the `frontendproxy` service by sending HTTP requests to the endpoint `http://frontendproxy:${env:ENVOY_PORT}`.
+    
+- **`docker_stats:`**
+    
+    This receiver collects metrics related to Docker containers by connecting to Docker through the UNIX socket `/var/run/docker.sock`.
+    
+- **`redis:`**
+    
+    This receiver collects metrics from a Redis instance running at the endpoint `valkey-cart:6379`, authenticating with the username `valkey`. It collects data every `10s`.
+    
+- **`hostmetrics:`**
+    
+    This receiver gathers various host-level metrics, such as CPU, disk, load, filesystem, memory, network, paging, and processes. Some metrics are filtered based on mount points and filesystem types.
+
+- **`prometheus:`**
+    
+    This receiver scrapes metrics from the OpenTelemetry Collector itself using Prometheus. It scrapes every `10s` from the target `0.0.0.0:8888`.
+
+### **Exporters**
+
+- **`debug:`**
+    
+    This exporter is likely used for debugging purposes, exporting data to a local or testing environment.
+    
+- **`otlp:`**
+    
+    Exports traces to a Jaeger instance running at `jaeger:4317` with `TLS` but marked as `insecure`, meaning it doesn’t enforce strict certificate checks.
+    
+- **`otlphttp/prometheus:`**
+    
+    Exports metrics to Prometheus using the OTLP over HTTP at the endpoint `http://prometheus:9090/api/v1/otlp`, also marked as `insecure`.
+    
+- **`opensearch:`**
+    
+    Exports logs to an OpenSearch instance at `http://opensearch:9200`. Logs are stored in an index named `otel`.
+
+### **Processors**
+
+- **`batch:`**
+    
+    This processor batches data before exporting it, which helps in reducing the number of requests sent to the exporters.
+    
+- **`transform:`**
+    
+    This processor modifies trace data. It contains statements to replace certain parts of trace span names, such as removing query parameters (`\\\\?.*`) and standardizing API endpoint names (e.g., `GET /api/products/{productId}`).
+
+### **Connectors**
+
+- **`spanmetrics:`**
+This connector is used to extract metrics from trace data, allowing for metrics such as request latency to be derived from traces.
+
+### **Service**
+
+- **`pipelines:`**
+Defines the pipelines for processing and exporting telemetry data:
+    - **`traces:`**
+        
+        Receivers: [otlp]
+        
+        Processors: [transform, batch]
+        
+        Exporters: [otlp, debug, spanmetrics]
+        
+        This pipeline handles trace data, processes it with the `transform` and `batch` processors, and exports it using the `otlp`, `debug`, and `spanmetrics` exporters.
+        
+    - **`metrics:`**
+        
+        Receivers: [hostmetrics, docker_stats, httpcheck/frontendproxy, otlp, prometheus, redis, spanmetrics]
+        
+        Processors: [batch]
+        
+        Exporters: [otlphttp/prometheus, debug]
+        
+        This pipeline handles metrics, processes them with the `batch` processor, and exports them to Prometheus and the debug endpoint.
+
+- **`logs:`**
+    
+    Receivers: [otlp]
+    
+    Processors: [batch]
+    
+    Exporters: [opensearch, debug]
+    
+    This pipeline handles log data, processes it with the `batch` processor, and exports it to OpenSearch and the debug endpoint.
+
+### Summary
+This file configures an OpenTelemetry Collector to gather telemetry data from various sources, process it, and export it to different backends like Jaeger, Prometheus, and OpenSearch. Each pipeline is responsible for a specific type of telemetry data (traces, metrics, logs), ensuring that the data is collected, processed, and exported according to the defined configuration.
