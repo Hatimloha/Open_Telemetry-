@@ -19,5 +19,4 @@ cd opentelemetry-demo/
 ## Understanding the docker compose file structure!
 
 > This Docker Compose file is designed to set up an observability demo environment using various microservices. If you're new to observability, here's how you can understand this setup:
-
 https://github.com/open-telemetry/opentelemetry-demo/blob/main/docker-compose.yml
