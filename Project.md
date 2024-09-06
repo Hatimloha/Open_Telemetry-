@@ -1,3 +1,23 @@
 # Otel Astronomy Shop Demo App
 
-<img width="1141" alt="Screenshot 2023-10-12 at 9 57 40 PM" src="[https://github.com/iam-veeramalla/python-for-devops/assets/43399466/d70f5fe2-0ba3-449d-b41f-413a38fc4584](https://cloudchamp.notion.site/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F84ad6f6a-681d-4a55-a9be-d328db326720%2F6d7a11a8-99df-42a9-bff2-21cade1459bf%2Fd68a88b2-913d-4ff3-b602-d2ccf8016dcb.png?table=block&id=05c1c8bf-0fe4-4b06-8ad5-33cdc616eb5f&spaceId=84ad6f6a-681d-4a55-a9be-d328db326720&width=1310&userId=&cache=v2)">
+## Prerequisites:
+- AWS Cloud
+### Steps:
+Create EC2 instance with the following configurations:
+- Ubuntu 22
+- T2.xlarge (More than 6GB ram required)
+- 15GB storage
+
+
+```shell
+git clone https://github.com/open-telemetry/opentelemetry-demo.git
+cd opentelemetry-demo/
+```
+
+> As a DevOps Engineer you should understand what this project is doing and how things are happening so let’s understand the docker compose file responsible for deploying the app.
+
+## Understanding the docker compose file structure!
+
+This Docker Compose file is designed to set up an observability demo environment using various microservices. If you're new to observability, here's how you can understand this setup:
+
+https://github.com/open-telemetry/opentelemetry-demo/blob/main/docker-compose.yml
