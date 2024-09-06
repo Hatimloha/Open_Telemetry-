@@ -71,6 +71,8 @@ https://github.com/open-telemetry/opentelemetry-demo/blob/main/docker-compose.ym
 
 **Service:** Defines how telemetry data flows through the system, specifying which receivers, processors, and exporters are used for traces, metrics, and logs.
 
+# This code block is for demonstration purposes only and should not be used on the Linux machine. It is already included in the cloned GitHub repository.
+
 ```shell
 # Copyright The OpenTelemetry Authors
 # SPDX-License-Identifier: Apache-2.0
